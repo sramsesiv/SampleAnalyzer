@@ -44,7 +44,7 @@ void ServoAnalyzerResults::GenerateExportFile( const char* file, DisplayBase dis
 		AnalyzerHelpers::GetTimeString( frame.mStartingSampleInclusive, trigger_sample, sample_rate, time_str, 128 );
 
 		char number_str[128];
-		AnalyzerHelpers::GetNumberString( frame.mData1, display_base, 8, number_str, 128 );
+		AnalyzerHelpers::GetNumberString( frame.mData1, display_base, 64, number_str, 128 );
 
 		file_stream << time_str << "," << number_str << std::endl;
 

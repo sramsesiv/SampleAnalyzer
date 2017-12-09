@@ -4,7 +4,7 @@
 #include <AnalyzerHelpers.h>
 
 ServoSimulationDataGenerator::ServoSimulationDataGenerator()
-:	mSerialText( "My first analyzer, woo hoo!" ),
+:	mServoText( "My first analyzer, woo hoo!" ),
 	mStringIndex( 0 )
 {
 }
@@ -20,7 +20,7 @@ void ServoSimulationDataGenerator::Initialize( U32 simulation_sample_rate, Servo
 
 	mSerialSimulationData.SetChannel( mSettings->mInputChannel );
 	mSerialSimulationData.SetSampleRate( simulation_sample_rate );
-	mSerialSimulationData.SetInitialBitState( BIT_HIGH );
+	mSerialSimulationData.SetInitialBitState( BIT_LOW );
 }
 
 U32 ServoSimulationDataGenerator::GenerateSimulationData( U64 largest_sample_requested, U32 sample_rate, SimulationChannelDescriptor** simulation_channel )
@@ -29,43 +29,26 @@ U32 ServoSimulationDataGenerator::GenerateSimulationData( U64 largest_sample_req
 
 	while( mSerialSimulationData.GetCurrentSampleNumber() < adjusted_largest_sample_requested )
 	{
-		CreateSerialByte();
+		CreateServoPulse();
 	}
 
 	*simulation_channel = &mSerialSimulationData;
 	return 1;
 }
 
-void ServoSimulationDataGenerator::CreateSerialByte()
+void ServoSimulationDataGenerator::CreateServoPulse()
 {
-	U32 samples_per_bit = mSimulationSampleRateHz / mSettings->mBitRate;
-
-	U8 byte = mSerialText[ mStringIndex ];
+	U8 byte = mServoText[ mStringIndex ];
+  U32 pulsesamples =  ((double)(70 + byte) / 100.0) * ((double)mSimulationSampleRateHz / 1000.0);
+  U32 periodsamples =  4.0 * ((double)mSimulationSampleRateHz / 1000.0); // Hard-code period to 4ms
 	mStringIndex++;
-	if( mStringIndex == mSerialText.size() )
+	if( mStringIndex == mServoText.size() )
 		mStringIndex = 0;
 
-	//we're currenty high
-	//let's move forward a little
-	mSerialSimulationData.Advance( samples_per_bit * 10 );
+  mSerialSimulationData.TransitionIfNeeded( BIT_HIGH ); //high-going edge for start of pulse
 
-	mSerialSimulationData.Transition();  //low-going edge for start bit
-	mSerialSimulationData.Advance( samples_per_bit );  //add start bit time
+	mSerialSimulationData.Advance( pulsesamples );
 
-	U8 mask = 0x1 << 7;
-	for( U32 i=0; i<8; i++ )
-	{
-		if( ( byte & mask ) != 0 )
-			mSerialSimulationData.TransitionIfNeeded( BIT_HIGH );
-		else
-			mSerialSimulationData.TransitionIfNeeded( BIT_LOW );
-
-		mSerialSimulationData.Advance( samples_per_bit );
-		mask = mask >> 1;
-	}
-
-	mSerialSimulationData.TransitionIfNeeded( BIT_HIGH ); //we need to end high
-
-	//lets pad the end a bit for the stop bit:
-	mSerialSimulationData.Advance( samples_per_bit );
+  mSerialSimulationData.TransitionIfNeeded( BIT_LOW ); //low-going edge for end of pulse
+	mSerialSimulationData.Advance( periodsamples-pulsesamples ); // end of period
 }

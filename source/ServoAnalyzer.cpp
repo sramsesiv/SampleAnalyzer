@@ -24,52 +24,35 @@ void ServoAnalyzer::SetupResults()
 
 void ServoAnalyzer::WorkerThread()
 {
+  Frame frame;
 	mSampleRateHz = GetSampleRate();
 
-	mSerial = GetAnalyzerChannelData( mSettings->mInputChannel );
+	mServo = GetAnalyzerChannelData( mSettings->mInputChannel );
 
-	if( mSerial->GetBitState() == BIT_LOW )
-		mSerial->AdvanceToNextEdge();
+	if( mServo->GetBitState() == BIT_LOW )
+  {
+		mServo->AdvanceToNextEdge();
+  }
 
-	U32 samples_per_bit = mSampleRateHz / mSettings->mBitRate;
-	U32 samples_to_first_center_of_first_data_bit = U32( 1.5 * double( mSampleRateHz ) / double( mSettings->mBitRate ) );
+  for ( ; ; )
+  {
+    frame.mStartingSampleInclusive = mServo->GetSampleNumber();
 
-	for( ; ; )
-	{
-		U8 data = 0;
-		U8 mask = 1 << 7;
-		
-		mSerial->AdvanceToNextEdge(); //falling edge -- beginning of the start bit
+    mServo->AdvanceToNextEdge(); //falling edge -- end of the pulse
+    S64 endsample = mServo->GetSampleNumber();
+    mServo->AdvanceToNextEdge(); // rising edge -- start of next pulse
+    frame.mEndingSampleInclusive = mServo->GetSampleNumber();
 
-		U64 starting_sample = mSerial->GetSampleNumber();
+    double pulsetime_ms = 1000.0 * (1000.0/mSampleRateHz) * (endsample - frame.mStartingSampleInclusive);
+    U64 data = pulsetime_ms;
 
-		mSerial->Advance( samples_to_first_center_of_first_data_bit );
+    frame.mData1 = data;
+    frame.mFlags = 0;
 
-		for( U32 i=0; i<8; i++ )
-		{
-			//let's put a dot exactly where we sample this bit:
-			mResults->AddMarker( mSerial->GetSampleNumber(), AnalyzerResults::Dot, mSettings->mInputChannel );
-
-			if( mSerial->GetBitState() == BIT_HIGH )
-				data |= mask;
-
-			mSerial->Advance( samples_per_bit );
-
-			mask = mask >> 1;
-		}
-
-
-		//we have a byte to save. 
-		Frame frame;
-		frame.mData1 = data;
-		frame.mFlags = 0;
-		frame.mStartingSampleInclusive = starting_sample;
-		frame.mEndingSampleInclusive = mSerial->GetSampleNumber();
-
-		mResults->AddFrame( frame );
-		mResults->CommitResults();
-		ReportProgress( frame.mEndingSampleInclusive );
-	}
+    mResults->AddFrame( frame );
+    mResults->CommitResults();
+    ReportProgress( frame.mEndingSampleInclusive );
+  }
 }
 
 bool ServoAnalyzer::NeedsRerun()
@@ -90,7 +73,7 @@ U32 ServoAnalyzer::GenerateSimulationData( U64 minimum_sample_index, U32 device_
 
 U32 ServoAnalyzer::GetMinimumSampleRateHz()
 {
-	return mSettings->mBitRate * 4;
+	return 5000;
 }
 
 const char* ServoAnalyzer::GetAnalyzerName() const
