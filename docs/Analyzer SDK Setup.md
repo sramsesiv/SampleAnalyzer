@@ -246,12 +246,12 @@ This section was written using the 1.1.32 Analyzer SDK, Xcode version 7.2.1, and
 
 - Expand the section "Search Paths"
 - Locate "Header Search Paths" and edit the value.
-- Click the "+" button and enter "../include" in the new entry.
+- Click the "+" button and enter "./AnalyzerSDK/include" in the new entry.
 
 ![11](./images/11_-_header_includes_search_path.png)
 
 - Locate "Library Search Paths" in the same section, and edit its value.
-- Click the "+" button and enter "../lib" in the new entry.
+- Click the "+" button and enter "./AnalyzerSDK/lib" in the new entry.
 
 ![11.5](./images/11_5_-_add_library_path.png)
 
