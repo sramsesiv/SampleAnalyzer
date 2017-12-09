@@ -212,7 +212,7 @@ This section was written using the 1.1.32 Analyzer SDK, Xcode version 7.2.1, and
 
 ![7](./images/7_-_library_target.png)
 
-- Enter a product name, we recommend the the same name as the project, since there will only be one product.
+- Enter a product name, we recommend the same name as the project, since there will only be one product.
 - Under framework, select "None (Plain C/C++ Library)
 - For Type, select "Dynamic"
 
