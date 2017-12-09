@@ -1,28 +1,28 @@
-#include "SimpleSerialAnalyzer.h"
-#include "SimpleSerialAnalyzerSettings.h"
+#include "SpeedAnalyzer.h"
+#include "SpeedAnalyzerSettings.h"
 #include <AnalyzerChannelData.h>
 
-SimpleSerialAnalyzer::SimpleSerialAnalyzer()
+SpeedAnalyzer::SpeedAnalyzer()
 :	Analyzer2(),  
-	mSettings( new SimpleSerialAnalyzerSettings() ),
+	mSettings( new SpeedAnalyzerSettings() ),
 	mSimulationInitilized( false )
 {
 	SetAnalyzerSettings( mSettings.get() );
 }
 
-SimpleSerialAnalyzer::~SimpleSerialAnalyzer()
+SpeedAnalyzer::~SpeedAnalyzer()
 {
 	KillThread();
 }
 
-void SimpleSerialAnalyzer::SetupResults()
+void SpeedAnalyzer::SetupResults()
 {
-	mResults.reset( new SimpleSerialAnalyzerResults( this, mSettings.get() ) );
+	mResults.reset( new SpeedAnalyzerResults( this, mSettings.get() ) );
 	SetAnalyzerResults( mResults.get() );
 	mResults->AddChannelBubblesWillAppearOn( mSettings->mInputChannel );
 }
 
-void SimpleSerialAnalyzer::WorkerThread()
+void SpeedAnalyzer::WorkerThread()
 {
 	mSampleRateHz = GetSampleRate();
 
@@ -72,12 +72,12 @@ void SimpleSerialAnalyzer::WorkerThread()
 	}
 }
 
-bool SimpleSerialAnalyzer::NeedsRerun()
+bool SpeedAnalyzer::NeedsRerun()
 {
 	return false;
 }
 
-U32 SimpleSerialAnalyzer::GenerateSimulationData( U64 minimum_sample_index, U32 device_sample_rate, SimulationChannelDescriptor** simulation_channels )
+U32 SpeedAnalyzer::GenerateSimulationData( U64 minimum_sample_index, U32 device_sample_rate, SimulationChannelDescriptor** simulation_channels )
 {
 	if( mSimulationInitilized == false )
 	{
@@ -88,24 +88,24 @@ U32 SimpleSerialAnalyzer::GenerateSimulationData( U64 minimum_sample_index, U32 
 	return mSimulationDataGenerator.GenerateSimulationData( minimum_sample_index, device_sample_rate, simulation_channels );
 }
 
-U32 SimpleSerialAnalyzer::GetMinimumSampleRateHz()
+U32 SpeedAnalyzer::GetMinimumSampleRateHz()
 {
 	return mSettings->mBitRate * 4;
 }
 
-const char* SimpleSerialAnalyzer::GetAnalyzerName() const
+const char* SpeedAnalyzer::GetAnalyzerName() const
 {
-	return "Simple Serial";
+	return "Speed Pulse";
 }
 
 const char* GetAnalyzerName()
 {
-	return "Simple Serial";
+	return "Speed Pulse";
 }
 
 Analyzer* CreateAnalyzer()
 {
-	return new SimpleSerialAnalyzer();
+	return new SpeedAnalyzer();
 }
 
 void DestroyAnalyzer( Analyzer* analyzer )
