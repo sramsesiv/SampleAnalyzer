@@ -239,6 +239,7 @@ This section was written using the 1.1.32 Analyzer SDK, Xcode version 7.2.1, and
 ![9.5](./images/9_5_-_verify_sources_added.png)
 
 - Click "Build Settings"
+- If "Basic" or "Customized" is selected, switch it to "All"
 - If "Levels" is selected, switch it to "Combined"
 
 ![10](./images/10_-_build_settings_page.png)
