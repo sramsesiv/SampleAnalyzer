@@ -190,8 +190,10 @@ This section was written using the 1.1.32 Analyzer SDK, Xcode version 7.2.1, and
 
 ![2.5](./images/2_5_analyzer_name.png)
 
-- The location should be set to the *parent directory* of the analyzer SDK folder recently downloaded and named identically to the Xcode project name, e.g. "Xcode Analyzer". Do not create a new folder, this will be done for  you by Xcode. 
+- The location should be set to the analyzer SDK folder recently downloaded and named identically to the Xcode project name, e.g. "Xcode Analyzer". Do not create a new folder, this will be done for you by Xcode. 
 - Click "Create"
+- Close Xcode
+- In a terminal or Finder move the newly created Xcode project up one directory and delete the directory Xcode originally placed it in.
 
 ![2.75](./images/2_75_-_project_location.png)
 
