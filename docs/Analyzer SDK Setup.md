@@ -183,10 +183,6 @@ This section was written using the 1.1.32 Analyzer SDK, Xcode version 7.2.1, and
 
 ![2.75](./images/2_75_-_project_location.png)
 
-- Back in Finder, copy the file "rename_analyzer.py" and "source" from the downloaded SDK directory into the freshly created folder, which will have the same name as your new analyzer. Shown here the name is "XcodeAnalyzer"
-
-![3](./images/3_-_copy_files.png)
-
 - Open a terminal, and browse to the new project folder in the downloaded SDK folder.
 - Run the python script with:
 
@@ -196,6 +192,10 @@ This section was written using the 1.1.32 Analyzer SDK, Xcode version 7.2.1, and
 - Second, it will ask you for the name to display to the user in the "Add Analyzers" menu. This should be the user facing name, and can include spaces.
 
 ![4](./images/4_-_rename_analyzer_script.png)
+
+- Back in Finder, copy the file "rename_analyzer.py" and "source" from the downloaded SDK directory into the freshly created folder, which will have the same name as your new analyzer. Shown here the name is "XcodeAnalyzer"
+
+![3](./images/3_-_copy_files.png)
 
 - Next, we need to add a target to the Xcode project. Be sure that the project is selected in the Project Navigator on the left, and then click the menu highlighted below to add a target.
 
