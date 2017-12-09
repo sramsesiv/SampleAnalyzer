@@ -192,10 +192,11 @@ This section was written using the 1.1.32 Analyzer SDK, Xcode version 7.2.1, and
 
 - The location should be set to the analyzer SDK folder recently downloaded and named identically to the Xcode project name, e.g. "Xcode Analyzer". Do not create a new folder, this will be done for you by Xcode. 
 - Click "Create"
+![2.75](./images/2_75_-_project_location.png)
+
 - Close Xcode
 - In a terminal or Finder move the newly created Xcode project up one directory and delete the directory Xcode originally placed it in.
-
-![2.75](./images/2_75_-_project_location.png)
+- Reopen Xcode by opening the moved project file.
 
 - Next, we need to add a target to the Xcode project. Be sure that the project is selected in the Project Navigator on the left, and then click the menu highlighted below to add a target.
 
