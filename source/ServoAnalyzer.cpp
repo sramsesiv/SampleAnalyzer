@@ -24,7 +24,6 @@ void ServoAnalyzer::SetupResults()
 
 void ServoAnalyzer::WorkerThread()
 {
-  Frame frame;
 	mSampleRateHz = GetSampleRate();
 
 	mServo = GetAnalyzerChannelData( mSettings->mInputChannel );
@@ -36,6 +35,7 @@ void ServoAnalyzer::WorkerThread()
 
   for ( ; ; )
   {
+    Frame frame;
     frame.mStartingSampleInclusive = mServo->GetSampleNumber();
 
     mServo->AdvanceToNextEdge(); //falling edge -- end of the pulse

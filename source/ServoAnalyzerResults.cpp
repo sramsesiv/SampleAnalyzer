@@ -33,7 +33,7 @@ void ServoAnalyzerResults::GenerateExportFile( const char* file, DisplayBase dis
 	U64 trigger_sample = mAnalyzer->GetTriggerSample();
 	U32 sample_rate = mAnalyzer->GetSampleRate();
 
-	file_stream << "Time [s],Value" << std::endl;
+	file_stream << "Time [s],Width[ms]" << std::endl;
 
 	U64 num_frames = GetNumFrames();
 	for( U32 i=0; i < num_frames; i++ )
@@ -44,7 +44,7 @@ void ServoAnalyzerResults::GenerateExportFile( const char* file, DisplayBase dis
 		AnalyzerHelpers::GetTimeString( frame.mStartingSampleInclusive, trigger_sample, sample_rate, time_str, 128 );
 
 		char number_str[128];
-		AnalyzerHelpers::GetNumberString( frame.mData1, display_base, 64, number_str, 128 );
+		AnalyzerHelpers::GetNumberString( frame.mData1, display_base, 10, number_str, 128 );
 
 		file_stream << time_str << "," << number_str << std::endl;
 
@@ -65,7 +65,7 @@ void ServoAnalyzerResults::GenerateFrameTabularText( U64 frame_index, DisplayBas
 	ClearTabularText();
 
 	char number_str[128];
-	AnalyzerHelpers::GetNumberString( frame.mData1, display_base, 8, number_str, 128 );
+	AnalyzerHelpers::GetNumberString( frame.mData1, display_base, 10, number_str, 128 );
 	AddTabularText( number_str );
 #endif
 }

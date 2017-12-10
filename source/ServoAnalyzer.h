@@ -29,7 +29,7 @@ protected: //vars
 	ServoSimulationDataGenerator mSimulationDataGenerator;
 	bool mSimulationInitilized;
 
-	//Serial analysis vars:
+	// Servo analysis vars:
 	U32 mSampleRateHz;
 };
 
