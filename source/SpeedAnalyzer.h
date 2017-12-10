@@ -24,15 +24,13 @@ public:
 protected: //vars
 	std::auto_ptr< SpeedAnalyzerSettings > mSettings;
 	std::auto_ptr< SpeedAnalyzerResults > mResults;
-	AnalyzerChannelData* mSerial;
+	AnalyzerChannelData* mSpeed;
 
 	SpeedSimulationDataGenerator mSimulationDataGenerator;
 	bool mSimulationInitilized;
 
-	//Serial analysis vars:
+	// Speed analysis vars:
 	U32 mSampleRateHz;
-	U32 mStartOfStopBitOffset;
-	U32 mEndOfStopBitOffset;
 };
 
 extern "C" ANALYZER_EXPORT const char* __cdecl GetAnalyzerName();

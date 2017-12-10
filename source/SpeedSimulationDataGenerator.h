@@ -19,11 +19,11 @@ protected:
 	U32 mSimulationSampleRateHz;
 
 protected:
-	void CreateSerialByte();
-	std::string mSerialText;
+	void CreateSpeedByte();
+	std::string mSpeedText;
 	U32 mStringIndex;
 
-	SimulationChannelDescriptor mSerialSimulationData;
+	SimulationChannelDescriptor mSpeedSimulationData;
 
 };
 #endif //SPEED_SIMULATION_DATA_GENERATOR

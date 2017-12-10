@@ -26,45 +26,25 @@ void SpeedAnalyzer::WorkerThread()
 {
 	mSampleRateHz = GetSampleRate();
 
-	mSerial = GetAnalyzerChannelData( mSettings->mInputChannel );
+	mSpeed = GetAnalyzerChannelData( mSettings->mInputChannel );
 
-	if( mSerial->GetBitState() == BIT_LOW )
-		mSerial->AdvanceToNextEdge();
-
-	U32 samples_per_bit = mSampleRateHz / mSettings->mBitRate;
-	U32 samples_to_first_center_of_first_data_bit = U32( 1.5 * double( mSampleRateHz ) / double( mSettings->mBitRate ) );
+	if( mSpeed->GetBitState() == BIT_LOW )
+  {
+		mSpeed->AdvanceToNextEdge();
+  }
 
 	for( ; ; )
 	{
-		U8 data = 0;
-		U8 mask = 1 << 7;
-		
-		mSerial->AdvanceToNextEdge(); //falling edge -- beginning of the start bit
+    Frame frame;
+    frame.mStartingSampleInclusive = mSpeed->GetSampleNumber();
+		mSpeed->AdvanceToNextEdge(); // falling edge -- end of the sensor pulse
+    mSpeed->AdvanceToNextEdge(); // rising edge -- end of the cycle pulse
+    frame.mEndingSampleInclusive = mSpeed->GetSampleNumber();
 
-		U64 starting_sample = mSerial->GetSampleNumber();
-
-		mSerial->Advance( samples_to_first_center_of_first_data_bit );
-
-		for( U32 i=0; i<8; i++ )
-		{
-			//let's put a dot exactly where we sample this bit:
-			mResults->AddMarker( mSerial->GetSampleNumber(), AnalyzerResults::Dot, mSettings->mInputChannel );
-
-			if( mSerial->GetBitState() == BIT_HIGH )
-				data |= mask;
-
-			mSerial->Advance( samples_per_bit );
-
-			mask = mask >> 1;
-		}
-
-
-		//we have a byte to save. 
-		Frame frame;
-		frame.mData1 = data;
-		frame.mFlags = 0;
-		frame.mStartingSampleInclusive = starting_sample;
-		frame.mEndingSampleInclusive = mSerial->GetSampleNumber();
+    S64 speed_samples = frame.mEndingSampleInclusive - frame.mStartingSampleInclusive;
+    double speedRPM = 60.0 * mSampleRateHz / (double)speed_samples;
+    frame.mData1 = speedRPM;
+    frame.mFlags = 0;
 
 		mResults->AddFrame( frame );
 		mResults->CommitResults();
@@ -90,7 +70,7 @@ U32 SpeedAnalyzer::GenerateSimulationData( U64 minimum_sample_index, U32 device_
 
 U32 SpeedAnalyzer::GetMinimumSampleRateHz()
 {
-	return mSettings->mBitRate * 4;
+	return 500;
 }
 
 const char* SpeedAnalyzer::GetAnalyzerName() const
