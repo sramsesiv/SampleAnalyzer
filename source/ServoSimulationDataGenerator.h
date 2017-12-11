@@ -23,7 +23,7 @@ protected:
   std::string mServoText;
   U32 mStringIndex;
 
-  SimulationChannelDescriptor mSerialSimulationData;
+  SimulationChannelDescriptor mServoSimulationData;
 
 };
 #endif //SERVO_SIMULATION_DATA_GENERATOR
