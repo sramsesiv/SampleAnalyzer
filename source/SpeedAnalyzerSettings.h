@@ -7,19 +7,19 @@
 class SpeedAnalyzerSettings : public AnalyzerSettings
 {
 public:
-	SpeedAnalyzerSettings();
-	virtual ~SpeedAnalyzerSettings();
+  SpeedAnalyzerSettings();
+  virtual ~SpeedAnalyzerSettings();
 
-	virtual bool SetSettingsFromInterfaces();
-	void UpdateInterfacesFromSettings();
-	virtual void LoadSettings( const char* settings );
-	virtual const char* SaveSettings();
+  virtual bool SetSettingsFromInterfaces();
+  void UpdateInterfacesFromSettings();
+  virtual void LoadSettings( const char* settings );
+  virtual const char* SaveSettings();
 
-	
-	Channel mInputChannel;
+  
+  Channel mInputChannel;
 
 protected:
-	std::auto_ptr< AnalyzerSettingInterfaceChannel >	mInputChannelInterface;
+  std::auto_ptr< AnalyzerSettingInterfaceChannel >	mInputChannelInterface;
 };
 
 #endif //SPEED_ANALYZER_SETTINGS

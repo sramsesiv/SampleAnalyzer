@@ -3,41 +3,41 @@
 #include <AnalyzerChannelData.h>
 
 SpeedAnalyzer::SpeedAnalyzer()
-:	Analyzer2(),  
-	mSettings( new SpeedAnalyzerSettings() ),
-	mSimulationInitilized( false )
+: Analyzer2(),
+  mSettings( new SpeedAnalyzerSettings() ),
+  mSimulationInitilized( false )
 {
-	SetAnalyzerSettings( mSettings.get() );
+  SetAnalyzerSettings( mSettings.get() );
 }
 
 SpeedAnalyzer::~SpeedAnalyzer()
 {
-	KillThread();
+  KillThread();
 }
 
 void SpeedAnalyzer::SetupResults()
 {
-	mResults.reset( new SpeedAnalyzerResults( this, mSettings.get() ) );
-	SetAnalyzerResults( mResults.get() );
-	mResults->AddChannelBubblesWillAppearOn( mSettings->mInputChannel );
+  mResults.reset( new SpeedAnalyzerResults( this, mSettings.get() ) );
+  SetAnalyzerResults( mResults.get() );
+  mResults->AddChannelBubblesWillAppearOn( mSettings->mInputChannel );
 }
 
 void SpeedAnalyzer::WorkerThread()
 {
-	mSampleRateHz = GetSampleRate();
+  mSampleRateHz = GetSampleRate();
 
-	mSpeed = GetAnalyzerChannelData( mSettings->mInputChannel );
+  mSpeed = GetAnalyzerChannelData( mSettings->mInputChannel );
 
-	if( mSpeed->GetBitState() == BIT_LOW )
+  if( mSpeed->GetBitState() == BIT_LOW )
   {
-		mSpeed->AdvanceToNextEdge();
+    mSpeed->AdvanceToNextEdge();
   }
 
-	for( ; ; )
-	{
+  for( ; ; )
+  {
     Frame frame;
     frame.mStartingSampleInclusive = mSpeed->GetSampleNumber();
-		mSpeed->AdvanceToNextEdge(); // falling edge -- end of the sensor pulse
+    mSpeed->AdvanceToNextEdge(); // falling edge -- end of the sensor pulse
     mSpeed->AdvanceToNextEdge(); // rising edge -- end of the cycle pulse
     frame.mEndingSampleInclusive = mSpeed->GetSampleNumber();
 
@@ -46,49 +46,49 @@ void SpeedAnalyzer::WorkerThread()
     frame.mData1 = speedRPM;
     frame.mFlags = 0;
 
-		mResults->AddFrame( frame );
-		mResults->CommitResults();
-		ReportProgress( frame.mEndingSampleInclusive );
-	}
+    mResults->AddFrame( frame );
+    mResults->CommitResults();
+    ReportProgress( frame.mEndingSampleInclusive );
+  }
 }
 
 bool SpeedAnalyzer::NeedsRerun()
 {
-	return false;
+  return false;
 }
 
 U32 SpeedAnalyzer::GenerateSimulationData( U64 minimum_sample_index, U32 device_sample_rate, SimulationChannelDescriptor** simulation_channels )
 {
-	if( mSimulationInitilized == false )
-	{
-		mSimulationDataGenerator.Initialize( GetSimulationSampleRate(), mSettings.get() );
-		mSimulationInitilized = true;
-	}
+  if( mSimulationInitilized == false )
+  {
+    mSimulationDataGenerator.Initialize( GetSimulationSampleRate(), mSettings.get() );
+    mSimulationInitilized = true;
+  }
 
-	return mSimulationDataGenerator.GenerateSimulationData( minimum_sample_index, device_sample_rate, simulation_channels );
+  return mSimulationDataGenerator.GenerateSimulationData( minimum_sample_index, device_sample_rate, simulation_channels );
 }
 
 U32 SpeedAnalyzer::GetMinimumSampleRateHz()
 {
-	return 500;
+  return 500;
 }
 
 const char* SpeedAnalyzer::GetAnalyzerName() const
 {
-	return "Speed Pulse";
+  return "Speed Pulse";
 }
 
 const char* GetAnalyzerName()
 {
-	return "Speed Pulse";
+  return "Speed Pulse";
 }
 
 Analyzer* CreateAnalyzer()
 {
-	return new SpeedAnalyzer();
+  return new SpeedAnalyzer();
 }
 
 void DestroyAnalyzer( Analyzer* analyzer )
 {
-	delete analyzer;
+  delete analyzer;
 }
