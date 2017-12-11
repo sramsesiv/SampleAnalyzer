@@ -3,20 +3,20 @@
 
 
 ServoAnalyzerSettings::ServoAnalyzerSettings()
-:	mInputChannel( UNDEFINED_CHANNEL )
+: mInputChannel( UNDEFINED_CHANNEL )
 {
-	mInputChannelInterface.reset( new AnalyzerSettingInterfaceChannel() );
-	mInputChannelInterface->SetTitleAndTooltip( "Servo", "Standard Servo Pulse" );
-	mInputChannelInterface->SetChannel( mInputChannel );
+  mInputChannelInterface.reset( new AnalyzerSettingInterfaceChannel() );
+  mInputChannelInterface->SetTitleAndTooltip( "Servo", "Standard Servo Pulse" );
+  mInputChannelInterface->SetChannel( mInputChannel );
 
-	AddInterface( mInputChannelInterface.get() );
+  AddInterface( mInputChannelInterface.get() );
 
-	AddExportOption( 0, "Export as text/csv file" );
-	AddExportExtension( 0, "text", "txt" );
-	AddExportExtension( 0, "csv", "csv" );
+  AddExportOption( 0, "Export as text/csv file" );
+  AddExportExtension( 0, "text", "txt" );
+  AddExportExtension( 0, "csv", "csv" );
 
-	ClearChannels();
-	AddChannel( mInputChannel, "Servo", false );
+  ClearChannels();
+  AddChannel( mInputChannel, "Servo", false );
 }
 
 ServoAnalyzerSettings::~ServoAnalyzerSettings()
@@ -25,37 +25,37 @@ ServoAnalyzerSettings::~ServoAnalyzerSettings()
 
 bool ServoAnalyzerSettings::SetSettingsFromInterfaces()
 {
-	mInputChannel = mInputChannelInterface->GetChannel();
+  mInputChannel = mInputChannelInterface->GetChannel();
 
-	ClearChannels();
-	AddChannel( mInputChannel, "Servo Pulse", true );
+  ClearChannels();
+  AddChannel( mInputChannel, "Servo Pulse", true );
 
-	return true;
+  return true;
 }
 
 void ServoAnalyzerSettings::UpdateInterfacesFromSettings()
 {
-	mInputChannelInterface->SetChannel( mInputChannel );
+  mInputChannelInterface->SetChannel( mInputChannel );
 }
 
 void ServoAnalyzerSettings::LoadSettings( const char* settings )
 {
-	SimpleArchive text_archive;
-	text_archive.SetString( settings );
+  SimpleArchive text_archive;
+  text_archive.SetString( settings );
 
-	text_archive >> mInputChannel;
+  text_archive >> mInputChannel;
 
-	ClearChannels();
-	AddChannel( mInputChannel, "Servo Pulse", true );
+  ClearChannels();
+  AddChannel( mInputChannel, "Servo Pulse", true );
 
-	UpdateInterfacesFromSettings();
+  UpdateInterfacesFromSettings();
 }
 
 const char* ServoAnalyzerSettings::SaveSettings()
 {
-	SimpleArchive text_archive;
+  SimpleArchive text_archive;
 
-	text_archive << mInputChannel;
+  text_archive << mInputChannel;
 
-	return SetReturnString( text_archive.GetString() );
+  return SetReturnString( text_archive.GetString() );
 }

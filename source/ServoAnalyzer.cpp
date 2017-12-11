@@ -3,37 +3,37 @@
 #include <AnalyzerChannelData.h>
 
 ServoAnalyzer::ServoAnalyzer()
-:	Analyzer2(),  
-	mSettings( new ServoAnalyzerSettings() ),
-	mSimulationInitilized( false )
+: Analyzer2(),
+  mSettings( new ServoAnalyzerSettings() ),
+  mSimulationInitilized( false )
 {
-	SetAnalyzerSettings( mSettings.get() );
+  SetAnalyzerSettings( mSettings.get() );
 }
 
 ServoAnalyzer::~ServoAnalyzer()
 {
-	KillThread();
+  KillThread();
 }
 
 void ServoAnalyzer::SetupResults()
 {
-	mResults.reset( new ServoAnalyzerResults( this, mSettings.get() ) );
-	SetAnalyzerResults( mResults.get() );
-	mResults->AddChannelBubblesWillAppearOn( mSettings->mInputChannel );
+  mResults.reset( new ServoAnalyzerResults( this, mSettings.get() ) );
+  SetAnalyzerResults( mResults.get() );
+  mResults->AddChannelBubblesWillAppearOn( mSettings->mInputChannel );
 }
 
 void ServoAnalyzer::WorkerThread()
 {
-	mSampleRateHz = GetSampleRate();
+  mSampleRateHz = GetSampleRate();
 
-	mServo = GetAnalyzerChannelData( mSettings->mInputChannel );
+  mServo = GetAnalyzerChannelData( mSettings->mInputChannel );
 
-	if( mServo->GetBitState() == BIT_LOW )
+  if( mServo->GetBitState() == BIT_LOW )
   {
-		mServo->AdvanceToNextEdge();
+    mServo->AdvanceToNextEdge();
   }
 
-  for ( ; ; )
+  for( ; ; )
   {
     Frame frame;
     frame.mStartingSampleInclusive = mServo->GetSampleNumber();
@@ -57,41 +57,41 @@ void ServoAnalyzer::WorkerThread()
 
 bool ServoAnalyzer::NeedsRerun()
 {
-	return false;
+  return false;
 }
 
 U32 ServoAnalyzer::GenerateSimulationData( U64 minimum_sample_index, U32 device_sample_rate, SimulationChannelDescriptor** simulation_channels )
 {
-	if( mSimulationInitilized == false )
-	{
-		mSimulationDataGenerator.Initialize( GetSimulationSampleRate(), mSettings.get() );
-		mSimulationInitilized = true;
-	}
+  if( mSimulationInitilized == false )
+  {
+    mSimulationDataGenerator.Initialize( GetSimulationSampleRate(), mSettings.get() );
+    mSimulationInitilized = true;
+  }
 
-	return mSimulationDataGenerator.GenerateSimulationData( minimum_sample_index, device_sample_rate, simulation_channels );
+  return mSimulationDataGenerator.GenerateSimulationData( minimum_sample_index, device_sample_rate, simulation_channels );
 }
 
 U32 ServoAnalyzer::GetMinimumSampleRateHz()
 {
-	return 5000;
+  return 5000;
 }
 
 const char* ServoAnalyzer::GetAnalyzerName() const
 {
-	return "Servo Pulse";
+  return "Servo Pulse";
 }
 
 const char* GetAnalyzerName()
 {
-	return "Servo Pulse";
+  return "Servo Pulse";
 }
 
 Analyzer* CreateAnalyzer()
 {
-	return new ServoAnalyzer();
+  return new ServoAnalyzer();
 }
 
 void DestroyAnalyzer( Analyzer* analyzer )
 {
-	delete analyzer;
+  delete analyzer;
 }

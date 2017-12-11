@@ -9,28 +9,28 @@ class ServoAnalyzerSettings;
 class ANALYZER_EXPORT ServoAnalyzer : public Analyzer2
 {
 public:
-	ServoAnalyzer();
-	virtual ~ServoAnalyzer();
+  ServoAnalyzer();
+  virtual ~ServoAnalyzer();
 
-	virtual void SetupResults();
-	virtual void WorkerThread();
+  virtual void SetupResults();
+  virtual void WorkerThread();
 
-	virtual U32 GenerateSimulationData( U64 newest_sample_requested, U32 sample_rate, SimulationChannelDescriptor** simulation_channels );
-	virtual U32 GetMinimumSampleRateHz();
+  virtual U32 GenerateSimulationData( U64 newest_sample_requested, U32 sample_rate, SimulationChannelDescriptor** simulation_channels );
+  virtual U32 GetMinimumSampleRateHz();
 
-	virtual const char* GetAnalyzerName() const;
-	virtual bool NeedsRerun();
+  virtual const char* GetAnalyzerName() const;
+  virtual bool NeedsRerun();
 
 protected: //vars
-	std::auto_ptr< ServoAnalyzerSettings > mSettings;
-	std::auto_ptr< ServoAnalyzerResults > mResults;
-	AnalyzerChannelData* mServo;
+  std::auto_ptr< ServoAnalyzerSettings > mSettings;
+  std::auto_ptr< ServoAnalyzerResults > mResults;
+  AnalyzerChannelData* mServo;
 
-	ServoSimulationDataGenerator mSimulationDataGenerator;
-	bool mSimulationInitilized;
+  ServoSimulationDataGenerator mSimulationDataGenerator;
+  bool mSimulationInitilized;
 
-	// Servo analysis vars:
-	U32 mSampleRateHz;
+  // Servo analysis vars:
+  U32 mSampleRateHz;
 };
 
 extern "C" ANALYZER_EXPORT const char* __cdecl GetAnalyzerName();
