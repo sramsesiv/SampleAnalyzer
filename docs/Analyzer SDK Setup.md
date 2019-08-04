@@ -164,6 +164,18 @@ Then type run to start the application. Add your custom analyzer and start a sim
 
 This section was written using the 1.1.32 Analyzer SDK, Xcode version 7.2.1, and OSX 10.10.5. however it is likely to work with other versions as well.
 
+- Set the name of the cloned repository to the name you intend to use for the Xcode project, e.g. 'Xcode Analyzer'
+
+- Open a terminal, and browse to the new project folder in the downloaded SDK folder.
+- Run the python script with:
+
+    python rename_analyzer.py
+
+- first, it will prompt you for the class prefix for all of the source files. All classes and files will be re-named with this prefix. If you type "I2C" the classes and files will be named with "I2CAnalyzer". Please avoid using analyzer in this name, as it will get repeated like this: "I2CAnalyzerAnalyzer"
+- Second, it will ask you for the name to display to the user in the "Add Analyzers" menu. This should be the user facing name, and can include spaces.
+
+![4](./images/4_-_rename_analyzer_script.png)
+
 - Start Xcode
 - Click "Create a new Xcode project"
 
@@ -178,24 +190,14 @@ This section was written using the 1.1.32 Analyzer SDK, Xcode version 7.2.1, and
 
 ![2.5](./images/2_5_analyzer_name.png)
 
-- The location should be set to the analyzer SDK folder recently downloaded, "SaleaeAnalyzerSdk-1.1.32". Do not create a new folder, this will be done for  you by Xcode. 
+- The location should be set to the analyzer SDK folder recently downloaded and named identically to the Xcode project name, e.g. "Xcode Analyzer". Do not create a new folder, this will be done for you by Xcode. 
 - Click "Create"
 
 ![2.75](./images/2_75_-_project_location.png)
 
-- Back in Finder, copy the file "rename_analyzer.py" and "source" from the downloaded SDK directory into the freshly created folder, which will have the same name as your new analyzer. Shown here the name is "XcodeAnalyzer"
-
-![3](./images/3_-_copy_files.png)
-
-- Open a terminal, and browse to the new project folder in the downloaded SDK folder.
-- Run the python script with:
-
-    python rename_analyzer.py
-
-- first, it will prompt you for the class prefix for all of the source files. All classes and files will be re-named with this prefix. If you type "I2C" the classes and files will be named with "I2CAnalyzer". Please avoid using analyzer in this name, as it will get repeated like this: "I2CAnalyzerAnalyzer"
-- Second, it will ask you for the name to display to the user in the "Add Analyzers" menu. This should be the user facing name, and can include spaces.
-
-![4](./images/4_-_rename_analyzer_script.png)
+- Close Xcode
+- In a terminal or Finder move the newly created Xcode project up one directory and delete the directory Xcode originally placed it in.
+- Reopen Xcode by opening the moved project file.
 
 - Next, we need to add a target to the Xcode project. Be sure that the project is selected in the Project Navigator on the left, and then click the menu highlighted below to add a target.
 
@@ -210,7 +212,7 @@ This section was written using the 1.1.32 Analyzer SDK, Xcode version 7.2.1, and
 
 ![7](./images/7_-_library_target.png)
 
-- Enter a product name, we recommend the the same name as the project, since there will only be one product.
+- Enter a product name, we recommend the same name as the project, since there will only be one product.
 - Under framework, select "None (Plain C/C++ Library)
 - For Type, select "Dynamic"
 
@@ -237,18 +239,19 @@ This section was written using the 1.1.32 Analyzer SDK, Xcode version 7.2.1, and
 ![9.5](./images/9_5_-_verify_sources_added.png)
 
 - Click "Build Settings"
+- If "Basic" or "Customized" is selected, switch it to "All"
 - If "Levels" is selected, switch it to "Combined"
 
 ![10](./images/10_-_build_settings_page.png)
 
 - Expand the section "Search Paths"
 - Locate "Header Search Paths" and edit the value.
-- Click the "+" button and enter "../include" in the new entry.
+- Click the "+" button and enter "./AnalyzerSDK/include" in the new entry.
 
 ![11](./images/11_-_header_includes_search_path.png)
 
 - Locate "Library Search Paths" in the same section, and edit its value.
-- Click the "+" button and enter "../lib" in the new entry.
+- Click the "+" button and enter "./AnalyzerSDK/lib" in the new entry.
 
 ![11.5](./images/11_5_-_add_library_path.png)
 
